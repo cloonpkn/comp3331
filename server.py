@@ -29,7 +29,7 @@ class clientThread(Thread):
         self.clientAlive = False
         self.privateQuery = False
         
-        print("===== New connection created for: ", clientAddress)
+        #print("===== New connection created for: ", clientAddress)
         self.clientAlive = True
         self.loggedIn = False
     

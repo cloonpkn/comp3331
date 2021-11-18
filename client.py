@@ -127,28 +127,34 @@ class p2pInThread(Thread):
     def __init__(self, clientSocket):
         Thread.__init__(self)
         self.clientSocket = clientSocket
-        print("p2p thread started")
+        #print("p2p thread started")
         self.p2pAlive = True
 
     def run(self):
         global p2pServeActive
         global p2pClientActive
-        
-        while self.p2pAlive == True:
-            message = self.clientSocket.recv(1024)
-            # handle private message requests
-            command = message.split(" ")
-            if command[0] == "private":
-                if command[1] == username:
-                    print(p2pQueryUser + "(private): " + " ".join(command[2:]))
-            if command[0] == "stopprivate":
-                if command[1] == username:
-                    if p2pClientActive == True:
-                        p2pClientSocket.send("stopprivate")
-                        p2pClientSocket.close()
-                    if p2pServeActive == True:
-                        p2pServeSocket.send("stopprivate")
-                        p2pServeSocket.close()
+        try:
+            while self.p2pAlive == True:
+                message = self.clientSocket.recv(1024)
+                # handle private message requests
+                command = message.split(" ")
+                if command[0] == "private":
+                    if command[1] == username:
+                        print(p2pQueryUser + "(private): " + " ".join(command[2:]))
+                if command[0] == "stopprivate":
+                    if command[1] == username:
+                        if p2pClientActive == True:
+                            p2pClientSocket.send("stopprivate " + p2pQueryUser)
+                            p2pClientActive = False
+                            p2pClientSocket.close()
+                            print("Private chat concluding")
+                        if p2pServeActive == True:
+                            p2pServeSocket.send("stopprivate " + p2pQueryUser)
+                            p2pServeActive = False
+                            p2pServeSocket.close()
+                            print("Private chat concluding")
+        except:
+            pass
                 
 
 
